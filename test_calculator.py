@@ -39,23 +39,26 @@ class TestCalculator(unittest.TestCase):
         self.temp_dir.cleanup()
 
     def test_save_to_history_creates_file(self):
-        # Временно подменяем open и os.path.exists
         with patch("builtins.open") as mock_open:
             with patch("os.path.exists") as mock_exists:
                 mock_exists.return_value = False
                 save_to_history("10 + 5 = 15.0")
-                mock_open.assert_called_once_with(
-                    "Calculator/history.txt", "w", encoding="utf-8"
-                )
+                mock_open.assert_called_once()
+                args, kwargs = mock_open.call_args
+                self.assertTrue(args[0].endswith("Calculator/history.txt"))
+                self.assertEqual(args[1], "w")
+                self.assertEqual(kwargs.get("encoding"), "utf-8")
 
     def test_save_to_history_appends(self):
         with patch("builtins.open") as mock_open:
             with patch("os.path.exists") as mock_exists:
                 mock_exists.return_value = True
                 save_to_history("10 + 5 = 15.0")
-                mock_open.assert_called_once_with(
-                    "Calculator/history.txt", "a", encoding="utf-8"
-                )
+                mock_open.assert_called_once()
+                args, kwargs = mock_open.call_args
+                self.assertTrue(args[0].endswith("Calculator/history.txt"))
+                self.assertEqual(args[1], "a")
+                self.assertEqual(kwargs.get("encoding"), "utf-8")
 
     # ========== ТЕСТЫ ДЛЯ SHOW_HISTORY (без реального файла) ==========
     @patch("builtins.print")

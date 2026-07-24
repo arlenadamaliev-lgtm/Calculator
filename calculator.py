@@ -27,11 +27,12 @@ def divide(a, b):
 
 def save_to_history(operation_str):
     """Сохраняет строку операции в файл history.txt"""
-    if not os.path.exists("Calculator/history.txt"):
+    path_to_history = os.path.join(os.path.dirname(__file__), "history.txt")
+    if not os.path.exists(path_to_history):
         mode = "w"
     else:
         mode = "a"
-    with open("Calculator/history.txt", mode, encoding="utf-8") as f:
+    with open(path_to_history, mode, encoding="utf-8") as f:
         f.write(f"{operation_str}\n")
 
 
